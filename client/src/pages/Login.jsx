@@ -11,17 +11,16 @@ export default function Login({ setIsLoggedIn }) {
   };
 
   const handleSubmit = async e => {
-    e.preventDefault();
-    try {
-      const res = await axios.post('http://localhost:5000/api/auth/login', form);
-      localStorage.setItem('token', res.data.token);
-      alert("Logged in!");
-      setIsLoggedIn(true);  
-      navigate('/dashboard');  // <-- redirect to dashboard
-    } catch (err) {
-      alert(err.response?.data?.msg || "Login failed");
-    }
-  };
+  e.preventDefault();
+  try {
+    const res = await axios.post('http://localhost:5000/api/auth/login', form);
+    localStorage.setItem('token', res.data.token);
+    setIsLoggedIn(true);  
+    navigate('/dashboard');  // Redirect immediately
+  } catch (err) {
+    alert(err.response?.data?.msg || "Login failed");
+  }
+};
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-slate-800 to-slate-900 text-white">

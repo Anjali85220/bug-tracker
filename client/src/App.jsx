@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import Projects from "./pages/Projects"; // <-- Added Projects import
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -21,12 +22,18 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+
+        {/* Protected Routes */}
         <Route
           path="/dashboard"
-          element={
-            isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />
-          }
+          element={isLoggedIn ? <Dashboard /> : <Navigate to="/login" replace />}
         />
+        <Route
+          path="/projects"
+          element={isLoggedIn ? <Projects /> : <Navigate to="/login" replace />}
+        />
+
+        {/* Catch-all */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
