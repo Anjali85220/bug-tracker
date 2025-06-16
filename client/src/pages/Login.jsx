@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import API from "../api/api"; // ✅ Make sure path is correct
 import { useNavigate } from "react-router-dom";
 
 export default function Login({ setIsLoggedIn }) {
@@ -10,17 +10,18 @@ export default function Login({ setIsLoggedIn }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async e => {
+ const handleSubmit = async (e) => {
   e.preventDefault();
   try {
-    const res = await axios.post('http://localhost:5000/api/auth/login', form);
-    localStorage.setItem('token', res.data.token);
-    setIsLoggedIn(true);  
-    navigate('/dashboard');  // Redirect immediately
+    const res = await API.post("/auth/login", form); // or your login API
+    localStorage.setItem("token", res.data.token);   // ✅ Save token
+    setIsLoggedIn(true);
+    navigate("/dashboard"); // or wherever you redirect
   } catch (err) {
-    alert(err.response?.data?.msg || "Login failed");
+    alert("Login failed");
   }
 };
+
 
   return (
     <div className="h-screen flex items-center justify-center bg-gradient-to-r from-slate-800 to-slate-900 text-white">

@@ -16,13 +16,18 @@ router.get("/:id", async (req, res) => {
   res.json(project);
 });
 
-// Create new project
 router.post("/", async (req, res) => {
   const { title, description, teamMembers } = req.body;
-  const project = new Project({ title, description, teamMembers });
-  await project.save();
-  res.status(201).json(project);
+
+  try {
+    const project = new Project({ title, description, teamMembers });
+    await project.save();
+    res.status(201).json(project);
+  } catch (err) {
+    res.status(400).json({ error: "Failed to create project", details: err.message });
+  }
 });
+
 
 // Update project
 router.put("/:id", async (req, res) => {

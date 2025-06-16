@@ -2,7 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
-const projectRoutes = require('./routes/projectRoutes'); // <-- Correct import
+const projectRoutes = require('./routes/projectRoutes');
+const ticketRoutes = require('./routes/ticketRoutes'); // ✅ Ticket route import
 
 require('dotenv').config();
 
@@ -14,7 +15,8 @@ app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/projects', projectRoutes); // <-- Correct route mount
+app.use('/api/projects', projectRoutes);
+app.use('/api/tickets', ticketRoutes); // ✅ Ticket route mount
 
 app.get('/', (req, res) => {
   res.send('API is running');
