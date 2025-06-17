@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 export default function TicketsPage() {
   const [tickets, setTickets] = useState([]);
   const [projects, setProjects] = useState([]);
+  const [comments, setComments] = useState({});
+  const [newComment, setNewComment] = useState({});
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -15,55 +17,78 @@ export default function TicketsPage() {
   const [editModal, setEditModal] = useState(null);
   const navigate = useNavigate();
 
+  const fetchComments = async (ticketId) => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`http://localhost:5000/api/comments/${ticketId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setComments(prev => ({ ...prev, [ticketId]: res.data }));
+    } catch (err) {
+      console.error("❌ Failed to fetch comments", err.response?.data?.msg || err.message);
+    }
+  };
+
+  const postComment = async (ticketId) => {
+    const text = newComment[ticketId]?.trim();
+    if (!text) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:5000/api/comments",
+        { ticketId, text },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setNewComment(prev => ({ ...prev, [ticketId]: "" }));
+      fetchComments(ticketId);
+    } catch (err) {
+      console.error("❌ Failed to add comment", err.response?.data?.msg || err.message);
+    }
+  };
+
   const fetchTickets = useCallback(async () => {
     try {
+      const token = localStorage.getItem("token");
       const allTickets = [];
       for (const proj of projects) {
-        const res = await axios.get(`http://localhost:5000/api/tickets/project/${proj._id}`);
+        const res = await axios.get(`http://localhost:5000/api/tickets/project/${proj._id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         allTickets.push(...res.data);
       }
       setTickets(allTickets);
     } catch (err) {
-      console.error("Failed to fetch tickets", err);
+      console.error("❌ Failed to fetch tickets", err.response?.data?.msg || err.message);
     }
   }, [projects]);
 
   const fetchProjects = useCallback(async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/projects");
+      const token = localStorage.getItem("token");
+      const res = await axios.get("http://localhost:5000/api/projects", {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setProjects(res.data);
       if (res.data.length > 0) {
         setForm((prev) => ({ ...prev, projectId: res.data[0]._id }));
       }
     } catch (err) {
-      console.error("Failed to fetch projects", err);
+      console.error("❌ Failed to fetch projects", err.response?.data?.msg || err.message);
     }
   }, []);
 
-  useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
-
-  useEffect(() => {
-    if (projects.length > 0) {
-      fetchTickets();
-    }
-  }, [projects, fetchTickets]);
+  useEffect(() => { fetchProjects(); }, [fetchProjects]);
+  useEffect(() => { if (projects.length > 0) fetchTickets(); }, [projects, fetchTickets]);
 
   const handleCreate = async () => {
     try {
-      const ticketData = {
-        ...form,
-        assignee: form.assignee || undefined
-      };
-      await axios.post("http://localhost:5000/api/tickets", ticketData);
-      setForm((prevForm) => ({
-        ...prevForm,
-        title: "",
-        description: "",
-        priority: "Medium",
-        assignee: ""
-      }));
+      const token = localStorage.getItem("token");
+      const ticketData = { ...form, assignee: form.assignee || undefined };
+      await axios.post("http://localhost:5000/api/tickets", ticketData, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setForm((prev) => ({ ...prev, title: "", description: "", priority: "Medium", assignee: "" }));
       fetchTickets();
     } catch (err) {
       console.error("❌ Error creating ticket", err.response?.data || err.message);
@@ -72,10 +97,13 @@ export default function TicketsPage() {
 
   const handleUpdate = async () => {
     try {
+      const token = localStorage.getItem("token");
       await axios.put(`http://localhost:5000/api/tickets/${editModal._id}`, {
         title: editModal.title,
         status: editModal.status,
         assignee: editModal.assignee
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       setEditModal(null);
       fetchTickets();
@@ -86,7 +114,10 @@ export default function TicketsPage() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/tickets/${id}`);
+      const token = localStorage.getItem("token");
+      await axios.delete(`http://localhost:5000/api/tickets/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       fetchTickets();
     } catch (err) {
       console.error("❌ Failed to delete ticket", err.response?.data || err.message);
@@ -99,30 +130,25 @@ export default function TicketsPage() {
     <div className="flex flex-col p-6">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">All Tickets</h2>
-        <button
-          className="bg-purple-600 text-white px-4 py-2 rounded"
-          onClick={() => navigate("/dashboard")}
-        >
+        <button className="bg-purple-600 text-white px-4 py-2 rounded" onClick={() => navigate("/dashboard")}>
           ⬅ Back to Dashboard
         </button>
       </div>
 
       <div className="flex gap-6">
-        {/* Left: Form */}
-        <div className="w-1/2">
+        {/* Ticket Form */}
+        <div className="w-1/2 space-y-6">
           <select
-            className="mb-4 p-2 border rounded w-full"
+            className="p-2 border rounded w-full"
             value={form.projectId}
-            onChange={(e) => {
-              setForm((prevForm) => ({ ...prevForm, projectId: e.target.value, assignee: "" }));
-            }}
+            onChange={(e) => setForm((prev) => ({ ...prev, projectId: e.target.value, assignee: "" }))}
           >
             {projects.map((proj) => (
               <option key={proj._id} value={proj._id}>{proj.title}</option>
             ))}
           </select>
 
-          <div className="bg-white p-4 rounded shadow mb-6">
+          <div className="bg-white p-4 rounded shadow">
             <input
               placeholder="Title"
               className="w-full mb-2 p-2 border rounded"
@@ -152,43 +178,33 @@ export default function TicketsPage() {
             >
               <option value="">-- Select Assignee (Optional) --</option>
               {selectedProject?.teamMembers?.map((member, idx) => (
-                <option key={idx} value={member.email}>
-                  {member.name}
-                </option>
+                <option key={idx} value={member.email}>{member.name}</option>
               ))}
             </select>
 
-            <button
-              className="bg-blue-600 text-white px-4 py-2 rounded w-full"
-              onClick={handleCreate}
-            >
+            <button className="bg-blue-600 text-white px-4 py-2 rounded w-full" onClick={handleCreate}>
               Create Ticket
             </button>
           </div>
         </div>
 
-        {/* Right: Grouped Ticket List by Project */}
+        {/* Ticket List */}
         <div className="w-1/2 space-y-6 overflow-y-auto max-h-[80vh] pr-2">
           {projects.map((project) => {
             const projectTickets = tickets.filter(ticket => ticket.projectId === project._id);
-
             if (projectTickets.length === 0) return null;
 
             return (
               <div key={project._id} className="border border-purple-300 rounded-lg shadow">
-                {/* 🔷 Project Header */}
                 <div className="bg-purple-100 text-purple-800 px-4 py-2 font-semibold text-lg rounded-t-md border-b border-purple-300">
                   {project.title}
                 </div>
-
-                {/* 🎫 Tickets under this project */}
                 <div className="p-4 space-y-4">
                   {projectTickets.map(ticket => (
                     <div key={ticket._id} className="bg-gray-100 p-4 rounded shadow relative">
                       <div className="absolute top-2 right-4 text-xs text-gray-400">
                         {new Date(ticket.createdAt).toLocaleString()}
                       </div>
-
                       <p className="text-xl font-semibold">{ticket.title}</p>
                       <p className="text-sm text-gray-600">{ticket.description}</p>
                       <p className="text-sm mt-2">
@@ -200,17 +216,38 @@ export default function TicketsPage() {
                       </p>
 
                       <div className="mt-3 flex gap-2">
+                        <button className="bg-yellow-500 text-white px-3 py-1 rounded" onClick={() => setEditModal({ ...ticket })}>Edit</button>
+                        <button className="bg-red-600 text-white px-3 py-1 rounded" onClick={() => handleDelete(ticket._id)}>Delete</button>
+                      </div>
+
+                      {/* Comments Section */}
+                      <div className="mt-4 border-t pt-3">
+                        <h4 className="text-sm font-semibold mb-2">Comments:</h4>
                         <button
-                          className="bg-yellow-500 text-white px-3 py-1 rounded"
-                          onClick={() => setEditModal({ ...ticket })}
+                          className="text-blue-600 text-xs underline mb-1"
+                          onClick={() => fetchComments(ticket._id)}
                         >
-                          Edit
+                          Refresh Comments
                         </button>
+
+                        {(comments[ticket._id] || []).map((cmt, idx) => (
+                          <div key={idx} className="text-sm bg-white p-2 my-1 rounded shadow">
+                            <strong>{cmt.userId?.name || cmt.userId?.email || "User"}:</strong> {cmt.text}
+                          </div>
+                        ))}
+
+                        <textarea
+                          rows={2}
+                          placeholder="Add comment..."
+                          className="w-full p-2 mt-2 border rounded"
+                          value={newComment[ticket._id] || ""}
+                          onChange={(e) => setNewComment(prev => ({ ...prev, [ticket._id]: e.target.value }))}
+                        />
                         <button
-                          className="bg-red-600 text-white px-3 py-1 rounded"
-                          onClick={() => handleDelete(ticket._id)}
+                          className="bg-blue-500 text-white px-3 py-1 rounded mt-1"
+                          onClick={() => postComment(ticket._id)}
                         >
-                          Delete
+                          Post Comment
                         </button>
                       </div>
                     </div>
@@ -242,7 +279,6 @@ export default function TicketsPage() {
               <option>In Progress</option>
               <option>Closed</option>
             </select>
-
             <select
               className="w-full mb-2 p-2 border rounded"
               value={editModal.assignee}
@@ -253,7 +289,6 @@ export default function TicketsPage() {
                 <option key={idx} value={member.email}>{member.name}</option>
               ))}
             </select>
-
             <div className="flex justify-end gap-2 mt-4">
               <button className="bg-gray-300 px-3 py-1 rounded" onClick={() => setEditModal(null)}>Cancel</button>
               <button className="bg-green-600 text-white px-3 py-1 rounded" onClick={handleUpdate}>Save</button>

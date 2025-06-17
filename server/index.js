@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projectRoutes');
-const ticketRoutes = require('./routes/ticketRoutes'); // ✅ Ticket route import
+const ticketRoutes = require('./routes/ticketRoutes');
+const commentRoutes = require('./routes/comments'); // ✅ Added this
 
 require('dotenv').config();
 
@@ -16,7 +17,8 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/projects', projectRoutes);
-app.use('/api/tickets', ticketRoutes); // ✅ Ticket route mount
+app.use('/api/tickets', ticketRoutes);
+app.use('/api/comments', commentRoutes); // ✅ Mounted the comment route
 
 app.get('/', (req, res) => {
   res.send('API is running');

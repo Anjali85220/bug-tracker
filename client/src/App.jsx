@@ -7,7 +7,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Projects from "./pages/Projects";
-import TicketsPage from "./pages/TicketsPage"; // ✅ Import tickets page
+import TicketsPage from './pages/TicketsPage'; // ✅ Import tickets page
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
