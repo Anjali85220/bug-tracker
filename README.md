@@ -161,14 +161,14 @@ A full-stack issue/bug tracker built using the MERN stack (MongoDB, Express, Rea
 ---
 
 ### ✅ Day 12 - Deployment  
-- Backend deployed on [Render](https://render.com)  
-- Frontend deployed on [Vercel](https://vercel.com)  
+- Backend deployed on [Railway](https://railway.com/project/058f08a8-292c-4289-b6e9-fa214fd58f46/service/c76783bd-4785-4d0c-be5e-a8b7911c0fcb?environmentId=e499caab-06a2-4336-a842-7714f7a6ede9)  
+- Frontend deployed on [Vercel]( https://bug-tracker-frontend-o4xldjvjk-shivanjali-dumpalas-projects.vercel.app)  
 - Connected to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)  
 - Environment variables (.env) secured in both frontend and backend  
 
 #### Screenshots  
 ![Day 12 - Vercel Deployment](./screenshots/day12-vercel.png)  
-![Day 12 - Render Deployment](./screenshots/day12-render.png)  
+![Day 12 - Render Deployment](./screenshots/day12-railway.png)  
 
 ---
 
