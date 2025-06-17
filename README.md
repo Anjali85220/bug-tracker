@@ -182,7 +182,6 @@ cd mern-bug-tracker
 # Backend
 cd server
 npm install
-# Create a .env file with your MongoDB URI and JWT secret
 npm run dev
 
 # Frontend
