@@ -119,7 +119,56 @@ A full-stack issue/bug tracker built using the MERN stack (MongoDB, Express, Rea
 - Removed redundant “Go to Dashboard” buttons and moved navigation into layout  
 - Cleaned up state handling and form resets  
 - Final testing using Postman  
-- Repository pushed to GitHub with complete backend/frontend
+- Repository pushed to GitHub with complete backend/frontend  
+
+---
+
+### ✅ Day 8 - Kanban Board with Drag-and-Drop  
+- Implemented a Kanban board with columns: To Do, In Progress, Done  
+- Used `react-beautiful-dnd` for drag-and-drop functionality  
+- Ticket status updates on drop, persisted to database via API  
+
+#### Screenshots  
+![Day 8 - Kanban Board](./screenshots/day8-kanban.png)  
+
+---
+
+### ✅ Day 9 - Comment System  
+- Added a Comment model with ticketId, userId, text, timestamp  
+- Users can post and view comments under each ticket  
+- Comments are displayed with usernames and timestamps  
+
+#### Screenshots  
+![Day 9 - Ticket Comments](./screenshots/day9-comments.png)  
+
+---
+
+### ✅ Day 10 - Ticket Filtering and Search  
+- Added dropdown filters for status, priority, assignee  
+- Implemented search bar for real-time keyword filtering  
+- Combined filtering and search for better UX  
+
+
+
+### ✅ Day 11 - Final UI Polishing  
+- Removed inline ticket edit fields; used modal-based edit forms  
+- Improved confirmation modals for delete/update/assign  
+- Enhanced visual layout for project selectors and ticket lists  
+
+#### Screenshots  
+![Day 11 - UI Cleanup](./screenshots/day11-polished.png)  
+
+---
+
+### ✅ Day 12 - Deployment  
+- Backend deployed on [Render](https://render.com)  
+- Frontend deployed on [Vercel](https://vercel.com)  
+- Connected to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)  
+- Environment variables (.env) secured in both frontend and backend  
+
+#### Screenshots  
+![Day 12 - Vercel Deployment](./screenshots/day12-vercel.png)  
+![Day 12 - Render Deployment](./screenshots/day12-render.png)  
 
 ---
 
@@ -127,16 +176,16 @@ A full-stack issue/bug tracker built using the MERN stack (MongoDB, Express, Rea
 
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/mern-bug-tracker.git
+git clone https://github.com/Anjali85220/bug-tracker.git
 cd mern-bug-tracker
 
 # Backend
-cd backend
+cd server
 npm install
 # Create a .env file with your MongoDB URI and JWT secret
 npm run dev
 
 # Frontend
-cd ../frontend
+cd client
 npm install
-npm run dev
+npm start
