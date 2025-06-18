@@ -5,6 +5,7 @@ const authRoutes = require('./routes/auth');
 const projectRoutes = require('./routes/projectRoutes');
 const ticketRoutes = require('./routes/ticketRoutes');
 const commentRoutes = require('./routes/comments');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;

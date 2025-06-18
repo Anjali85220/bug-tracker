@@ -15,12 +15,20 @@ export default function Dashboard() {
     search: "",
   });
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/");
+  };
+
   const fetchProjects = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("https://bug-tracker-nb3y.onrender.com/api/projects", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "https://bug-tracker-nb3y.onrender.com/api/projects",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       setProjects(res.data);
     } catch (err) {
       console.error("Failed to fetch projects", err);
@@ -90,12 +98,13 @@ export default function Dashboard() {
   const statuses = ["Open", "In Progress", "Closed"];
 
   const uniqueAssignees = [
-    ...new Set(tickets.map((t) => t.assignee?.name || t.assignee).filter(Boolean)),
+    ...new Set(
+      tickets.map((t) => t.assignee?.name || t.assignee).filter(Boolean)
+    ),
   ];
 
   const filteredTickets = tickets.filter((ticket) => {
-    const matchesStatus =
-      !filters.status || ticket.status === filters.status;
+    const matchesStatus = !filters.status || ticket.status === filters.status;
     const matchesPriority =
       !filters.priority || ticket.priority === filters.priority;
     const matchesAssignee =
@@ -105,7 +114,9 @@ export default function Dashboard() {
     const matchesSearch =
       !filters.search ||
       ticket.title.toLowerCase().includes(filters.search.toLowerCase()) ||
-      ticket.description?.toLowerCase().includes(filters.search.toLowerCase());
+      ticket.description
+        ?.toLowerCase()
+        .includes(filters.search.toLowerCase());
 
     return (
       matchesStatus && matchesPriority && matchesAssignee && matchesSearch
@@ -113,7 +124,7 @@ export default function Dashboard() {
   });
 
   return (
-    <DashboardLayout>
+    <DashboardLayout onLogout={handleLogout}>
       <h1 className="text-3xl font-bold text-gray-800 mb-4">
         Welcome to the Dashboard
       </h1>
