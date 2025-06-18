@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 // ✅ Allow only your frontend (Vercel) URL
 app.use(cors({
-  origin: 'https://bug-tracker-jqu8evfxx-shivanjali-dumpalas-projects.vercel.app', // ⬅️ Replace with your actual Vercel frontend URL
+  origin: 'https://bug-tracker-jof6irpha-shivanjali-dumpalas-projects.vercel.app', // ⬅️ Replace with your actual Vercel frontend URL
   credentials: true
 }));
 
