@@ -10,8 +10,8 @@ const authMiddleware = (req, res, next) => {
   const token = authHeader.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // ⚠️ this must include `id` field from token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET); // Verify JWT
+    req.user = decoded; // Attach decoded user to request
     next();
   } catch (err) {
     return res.status(401).json({ error: "Unauthorized - Invalid token" });

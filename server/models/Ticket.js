@@ -2,8 +2,14 @@ const mongoose = require("mongoose");
 
 const ticketSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true },
-    description: { type: String, default: "" },
+    title: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+      default: "",
+    },
     priority: {
       type: String,
       enum: ["Low", "Medium", "High"],
@@ -15,17 +21,12 @@ const ticketSchema = new mongoose.Schema(
       default: "Open",
     },
     assignee: {
-      type: String,
+      type: String, // Now stores email or name as a string
       default: null,
     },
     projectId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Project",
-      required: true,
-    },
-    createdBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
       required: true,
     },
   },
