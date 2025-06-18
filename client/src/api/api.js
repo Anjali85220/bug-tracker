@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://bug-tracker-nb3y.onrender.com/api",
 });
 
 // PROJECT APIs

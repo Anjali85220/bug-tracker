@@ -18,7 +18,7 @@ export default function Dashboard() {
   const fetchProjects = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/projects", {
+      const res = await axios.get("https://bug-tracker-nb3y.onrender.com/api/projects", {
         headers: { Authorization: `Bearer ${token}` },
       });
       setProjects(res.data);
@@ -34,7 +34,7 @@ export default function Dashboard() {
 
       for (const proj of projects) {
         const res = await axios.get(
-          `http://localhost:5000/api/tickets/project/${proj._id}`,
+          `https://bug-tracker-nb3y.onrender.com/api/tickets/project/${proj._id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -76,7 +76,7 @@ export default function Dashboard() {
     try {
       const token = localStorage.getItem("token");
       await axios.put(
-        `http://localhost:5000/api/tickets/${draggableId}`,
+        `https://bug-tracker-nb3y.onrender.com/api/tickets/${draggableId}`,
         { status: destination.droppableId },
         {
           headers: { Authorization: `Bearer ${token}` },

@@ -20,7 +20,7 @@ export default function TicketsPage() {
   const fetchComments = async (ticketId) => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get(`http://localhost:5000/api/comments/${ticketId}`, {
+      const res = await axios.get(`https://bug-tracker-nb3y.onrender.com/api/comments/${ticketId}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setComments(prev => ({ ...prev, [ticketId]: res.data }));
@@ -36,7 +36,7 @@ export default function TicketsPage() {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://localhost:5000/api/comments",
+        "https://bug-tracker-nb3y.onrender.com/api/comments",
         { ticketId, text },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -52,7 +52,7 @@ export default function TicketsPage() {
       const token = localStorage.getItem("token");
       const allTickets = [];
       for (const proj of projects) {
-        const res = await axios.get(`http://localhost:5000/api/tickets/project/${proj._id}`, {
+        const res = await axios.get(`https://bug-tracker-nb3y.onrender.com/api/tickets/project/${proj._id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         allTickets.push(...res.data);
@@ -66,7 +66,7 @@ export default function TicketsPage() {
   const fetchProjects = useCallback(async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.get("http://localhost:5000/api/projects", {
+      const res = await axios.get("https://bug-tracker-nb3y.onrender.com/api/projects", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProjects(res.data);
@@ -85,7 +85,7 @@ export default function TicketsPage() {
     try {
       const token = localStorage.getItem("token");
       const ticketData = { ...form, assignee: form.assignee || undefined };
-      await axios.post("http://localhost:5000/api/tickets", ticketData, {
+      await axios.post("https://bug-tracker-nb3y.onrender.com/api/tickets", ticketData, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setForm((prev) => ({ ...prev, title: "", description: "", priority: "Medium", assignee: "" }));
@@ -98,7 +98,7 @@ export default function TicketsPage() {
   const handleUpdate = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.put(`http://localhost:5000/api/tickets/${editModal._id}`, {
+      await axios.put(`https://bug-tracker-nb3y.onrender.com/api/tickets/${editModal._id}`, {
         title: editModal.title,
         status: editModal.status,
         assignee: editModal.assignee
@@ -115,7 +115,7 @@ export default function TicketsPage() {
   const handleDelete = async (id) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:5000/api/tickets/${id}`, {
+      await axios.delete(`https://bug-tracker-nb3y.onrender.com/api/tickets/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       fetchTickets();

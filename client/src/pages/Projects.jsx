@@ -13,7 +13,7 @@ export default function Projects() {
 
   const fetchProjects = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/projects");
+      const res = await axios.get("https://bug-tracker-nb3y.onrender.com/api/projects");
       setProjects(res.data);
     } catch (err) {
       console.error("Failed to fetch projects", err);
@@ -27,7 +27,7 @@ export default function Projects() {
         return { name, email };
       });
 
-      await axios.post("http://localhost:5000/api/projects", {
+      await axios.post("https://bug-tracker-nb3y.onrender.com/api/projects", {
         title: form.title,
         description: form.description,
         teamMembers,
@@ -42,7 +42,7 @@ export default function Projects() {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/api/projects/${id}`);
+      await axios.delete(`https://bug-tracker-nb3y.onrender.com/api/projects/${id}`);
       fetchProjects();
     } catch (err) {
       console.error("Failed to delete project", err);
